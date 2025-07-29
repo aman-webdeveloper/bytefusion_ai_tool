@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ByteFusion AI Idea Generator</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin: 5px;
+      width: 250px;
+    }
+    button {
+      background: #f5c518;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffd700;
+    }
+    #result {
+      background: #243b55;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      text-align: left;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #result.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<h2>💡 ByteFusion AI Business Idea Generator</h2>
+<input id="industry" placeholder="Enter Industry (e.g. Education)">
+<button onclick="generate()">Generate</button>
+<div id="result">Your ideas will appear here...</div>
+
+<script>
+async function generate(){
+  let industry = document.getElementById('industry').value;
+  let resultDiv = document.getElementById('result');
+
+  if (!industry.trim()) {
+    resultDiv.innerText = "⚠️ Please enter an industry.";
+    resultDiv.classList.add("show");
+    return;
+  }
+
+  resultDiv.innerHTML = "<em>⏳ Generating ideas...</em>";
+  resultDiv.classList.add("show");
+
+  try {
+    let res = await fetch(`/api/generate?industry=${encodeURIComponent(industry)}`);
+    let data = await res.json();
+
+    resultDiv.innerText = data.ideas || "⚠️ No ideas generated.";
+  } catch (error) {
+    resultDiv.innerText = "❌ Error generating ideas.";
+  }
+}
+</script>
+
+</body>
+</html>

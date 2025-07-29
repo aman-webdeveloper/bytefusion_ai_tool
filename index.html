@@ -68,7 +68,6 @@ async function generate(){
   try {
     let res = await fetch(`/api/generate?industry=${encodeURIComponent(industry)}`);
     let data = await res.json();
-
     resultDiv.innerText = data.ideas || "⚠️ No ideas generated.";
   } catch (error) {
     resultDiv.innerText = "❌ Error generating ideas.";

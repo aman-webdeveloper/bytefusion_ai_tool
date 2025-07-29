@@ -9,7 +9,6 @@ export default async function handler(req, res) {
 
   try {
     const API_KEY = process.env.GEMINI_API_KEY;
-    console.log("🔑 API Key Loaded:", API_KEY ? "Yes" : "No");
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,

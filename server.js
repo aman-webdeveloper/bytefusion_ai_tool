@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-dotenv.config(); // .env load karega
+dotenv.config(); // Load env
+
+// Debug API Key
+const API_KEY = process.env.GEMINI_API_KEY;
+console.log("🔑 API Key Loaded:", API_KEY ? "Yes" : "No");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,19 +16,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
-// Static files serve karne ke liye (index.html)
+// Serve static files
 app.use(express.static(__dirname));
 
 app.get("/api/generate", async (req, res) => {
   const industry = req.query.industry;
-
   if (!industry) {
     return res.status(400).json({ error: "Industry is required" });
   }
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

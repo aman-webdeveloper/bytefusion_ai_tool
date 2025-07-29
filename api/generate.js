@@ -9,7 +9,6 @@ export default async function handler(req, res) {
 
   try {
     const API_KEY = process.env.GEMINI_API_KEY;
-
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
@@ -19,13 +18,10 @@ export default async function handler(req, res) {
           contents: [
             {
               parts: [
-                {
-                  text: `Generate 5 startup ideas for ${industry} industry.
-                  Each idea should include:
-                  1. Short name
-                  2. One-line description
-                  3. Revenue model`
-                }
+                { text: `Generate 5 startup ideas for ${industry} industry. Each with:
+                  1. Short Name
+                  2. One-line Description
+                  3. Revenue Model` }
               ]
             }
           ]
@@ -40,7 +36,6 @@ export default async function handler(req, res) {
 
     res.status(200).json({ ideas });
   } catch (error) {
-    console.error("❌ Error:", error);
     res.status(500).json({ error: "Something went wrong" });
   }
 }

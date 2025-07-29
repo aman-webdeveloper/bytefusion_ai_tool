@@ -21,8 +21,8 @@ export default async function handler(req, res) {
             {
               parts: [
                 {
-                  text: `Generate 5 startup ideas for ${industry} industry. 
-                  Each idea should have:
+                  text: `Generate 5 startup ideas for ${industry} industry.
+                  Each idea should include:
                   1. Short name
                   2. One-line description
                   3. Revenue model`
@@ -35,11 +35,9 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
-    console.log("🔍 API Raw Response:", JSON.stringify(data, null, 2));
-
     const ideas =
       data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") ||
-      "⚠️ No ideas generated.";
+      "No ideas generated.";
 
     res.status(200).json({ ideas });
   } catch (error) {

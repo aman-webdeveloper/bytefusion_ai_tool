@@ -8,8 +8,11 @@ export default async function handler(req, res) {
   }
 
   try {
+    const API_KEY = process.env.GEMINI_API_KEY;
+    console.log("🔑 API Key Loaded:", API_KEY ? "Yes" : "No");
+
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -18,7 +21,11 @@ export default async function handler(req, res) {
             {
               parts: [
                 {
-                  text: `Generate 5 startup ideas for ${industry}. Each idea should have a short name, one-line description, and revenue model.`
+                  text: `Generate 5 startup ideas for ${industry} industry. 
+                  Each idea should have:
+                  1. Short name
+                  2. One-line description
+                  3. Revenue model`
                 }
               ]
             }
@@ -28,13 +35,15 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    console.log("🔍 API Raw Response:", JSON.stringify(data, null, 2));
 
-    if (data?.candidates?.length > 0) {
-      res.status(200).json({ ideas: data.candidates[0].content.parts[0].text });
-    } else {
-      res.status(500).json({ error: "No ideas found." });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const ideas =
+      data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") ||
+      "⚠️ No ideas generated.";
+
+    res.status(200).json({ ideas });
+  } catch (error) {
+    console.error("❌ Error:", error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
